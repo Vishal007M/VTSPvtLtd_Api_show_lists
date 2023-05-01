@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         );
-
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         queue.add(request);
 
