@@ -1,11 +1,12 @@
 package com.vsl.VTSPvtLtd;
 
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Bundle;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -17,19 +18,19 @@ import com.google.gson.GsonBuilder;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String url = "http://103.125.53.126:9222/API/LoadingList";
+    private static final String url = "https://jsonplaceholder.typicode.com/comments?postid=1";
     RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.recview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        
         processData();
-        
+
     }
 
     public void processData() {
@@ -40,10 +41,16 @@ public class MainActivity extends AppCompatActivity {
 
                 GsonBuilder builder = new GsonBuilder();
                 Gson gson = builder.create();
-                model data[]=gson.fromJson(response,model[].class);
-
+                model[] data = gson.fromJson(response, model[].class);
                 myadapter adapter = new myadapter(data);
+
+                SharedPreferences shrd = getSharedPreferences("save", MODE_PRIVATE);
+                SharedPreferences.Editor editor = shrd.edit();
+                editor.putString("str", response);
+                editor.apply();
+
                 recyclerView.setAdapter(adapter);
+
             }
         }, new Response.ErrorListener() {
             @Override
